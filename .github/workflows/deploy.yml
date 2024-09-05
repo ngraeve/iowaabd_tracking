@@ -7,15 +7,16 @@ on:
 
 jobs:
   deployment:
+    environment: dev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@4.0.1
-#        with:
-#          role-to-assume: arn:aws:iam::<acctnumber>:role/<rolename>
-#          aws-region: us-east-1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTION_ROLE }}
+          aws-region: us-east-2
 
       - name: Setup Python
         uses: actions/setup-python@v5
