@@ -43,4 +43,4 @@ jobs:
         run: npm install -g aws-cdk@2.155.0
 
       - name: Deploy app
-        run: cdk deploy --required-approval never
+        run: cdk deploy --require-approval never
