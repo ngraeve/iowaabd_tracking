@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+
 jobs:
   deployment:
     environment: dev
@@ -13,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@4
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTION_ROLE }}
           aws-region: us-east-2
