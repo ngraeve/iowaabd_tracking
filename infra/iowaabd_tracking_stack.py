@@ -34,7 +34,7 @@ class IowaabdTrackingStack(Stack):
             code=_lambda.Code.from_asset("src/lambda/lottery"),
             handler="lottery.lambda_handler",
             log_group=lottery_log_group,
-            timeout=Duration.seconds(10),
+            timeout=Duration.seconds(20),
             environment={
                 'lottery_parameter_name': lottery_parameter.parameter_name
             },
