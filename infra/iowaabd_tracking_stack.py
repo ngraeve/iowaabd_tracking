@@ -43,7 +43,7 @@ class IowaabdTrackingStack(Stack):
                        },
                        )
 
-        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMServiceRolePolicy'))
+        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('aws-service-role/AmazonSSMServiceRolePolicy'))
 
         # lottery_function = _lambda.Function(
         #     self,
