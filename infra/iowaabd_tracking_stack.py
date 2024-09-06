@@ -5,6 +5,8 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_ssm as _ssm,
 )
+
+from aws_cdk.aws_lambda_python_alpha import PythonFunction as _lambda_python
 from constructs import Construct
 
 
@@ -26,6 +28,20 @@ class IowaabdTrackingStack(Stack):
             "Lottery Log Group",
             retention=_logs.RetentionDays.ONE_DAY,
             )
+
+        _lambda_python(self,
+                       "LotteryFunction",
+                       entry="src/lambda/lottery",
+                       runtime=_lambda.Runtime.PYTHON_3_12,
+                       index="lottery.py",
+                       handler="lambda_handler",
+                       log_group=lottery_log_group,
+                       timeout=Duration.seconds(20),
+                       environment={
+                           'lottery_parameter_name': lottery_parameter.parameter_name
+                       },
+                       )
+
 
         lottery_function = _lambda.Function(
             self,
