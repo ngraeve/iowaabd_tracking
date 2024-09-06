@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_logs as _logs,
     aws_lambda as _lambda,
     aws_ssm as _ssm,
+    aws_iam as _iam,
 )
 
 from aws_cdk.aws_lambda_python_alpha import PythonFunction as _lambda_python
@@ -29,7 +30,7 @@ class IowaabdTrackingStack(Stack):
             retention=_logs.RetentionDays.ONE_DAY,
             )
 
-        _lambda_python(self,
+        lottery_function = _lambda_python(self,
                        "LotteryFunction",
                        entry="src/lambda/lottery",
                        runtime=_lambda.Runtime.PYTHON_3_12,
@@ -42,17 +43,18 @@ class IowaabdTrackingStack(Stack):
                        },
                        )
 
+        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMServiceRolePolicy'))
 
-        lottery_function = _lambda.Function(
-            self,
-            "HelloWorldFunction",
-            runtime=_lambda.Runtime.PYTHON_3_12,
-            code=_lambda.Code.from_asset("src/lambda/lottery"),
-            handler="lottery.lambda_handler",
-            log_group=lottery_log_group,
-            timeout=Duration.seconds(20),
-            environment={
-                'lottery_parameter_name': lottery_parameter.parameter_name
-            },
-
-        )
+        # lottery_function = _lambda.Function(
+        #     self,
+        #     "HelloWorldFunction",
+        #     runtime=_lambda.Runtime.PYTHON_3_12,
+        #     code=_lambda.Code.from_asset("src/lambda/lottery"),
+        #     handler="lottery.lambda_handler",
+        #     log_group=lottery_log_group,
+        #     timeout=Duration.seconds(20),
+        #     environment={
+        #         'lottery_parameter_name': lottery_parameter.parameter_name
+        #     },
+        #
+        # )
