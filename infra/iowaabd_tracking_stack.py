@@ -38,32 +38,19 @@ class IowaabdTrackingStack(Stack):
             retention=_logs.RetentionDays.ONE_DAY,
             )
 
-        lottery_function = _lambda_python(self,
-                       "LotteryFunction",
-                       entry="src/lambda/lottery",
-                       runtime=_lambda.Runtime.PYTHON_3_12,
-                       index="lottery.py",
-                       handler="lambda_handler",
-                       log_group=lottery_log_group,
-                       timeout=Duration.seconds(20),
-                       environment={
-                           'lottery_current_list_parameter_name': lottery_current_list_parameter.parameter_name,
-                           'lottery_url_parameter_name': lottery_url_parameter.parameter_name
-                       },
-                       )
-        # lottery_function.add_to_role_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('aws-service-role/AmazonSSMServiceRolePolicy'))
-        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMReadOnlyAccess'))
+        lottery_function = _lambda_python(
+            self,
+            "LotteryFunction",
+            entry="src/lambda/lottery",
+            runtime=_lambda.Runtime.PYTHON_3_12,
+            index="lottery.py",
+            handler="lambda_handler",
+            log_group=lottery_log_group,
+            timeout=Duration.seconds(20),
+            environment={
+                'lottery_current_list_parameter_name': lottery_current_list_parameter.parameter_name,
+                'lottery_url_parameter_name': lottery_url_parameter.parameter_name
+            },
+        )
 
-        # lottery_function = _lambda.Function(
-        #     self,
-        #     "HelloWorldFunction",
-        #     runtime=_lambda.Runtime.PYTHON_3_12,
-        #     code=_lambda.Code.from_asset("src/lambda/lottery"),
-        #     handler="lottery.lambda_handler",
-        #     log_group=lottery_log_group,
-        #     timeout=Duration.seconds(20),
-        #     environment={
-        #         'lottery_parameter_name': lottery_parameter.parameter_name
-        #     },
-        #
-        # )
+        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMReadOnlyAccess'))

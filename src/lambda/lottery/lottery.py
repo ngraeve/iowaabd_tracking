@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 
 import requests
@@ -45,12 +46,12 @@ def get_live_data(url):
     return data
 
 
-def write_new_data(parameter_name, new_data):
+def write_new_data(parameter_name, new_data_string):
     logger.info(f'Updating value of {parameter_name} parameter')
     try:
         response = ssm_client.put_parameter(
             Name=parameter_name,
-            Value=new_data,
+            Value=new_data_string,
             Overwrite=True
         )
         logger.info("Parameter successfully updated:", response)
@@ -68,4 +69,4 @@ def lambda_handler(event, context):
 
     if new_dict != old_dict:
         logger.info('Website has updated')
-        write_new_data(os.environ['lottery_current_list_parameter_name'], new_dict)
+        write_new_data(os.environ['lottery_current_list_parameter_name'], json.dumps(new_dict))
