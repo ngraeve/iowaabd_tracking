@@ -33,6 +33,7 @@ def get_old_data():
 def write_new_data(new_data):
     print('writing to file')
 
+
 def lambda_handler(event, context):
     old = get_old_data()
     print(old)
