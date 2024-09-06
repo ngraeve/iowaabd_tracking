@@ -31,8 +31,8 @@ class IowaabdTrackingStack(Stack):
             self,
             "HelloWorldFunction",
             runtime=_lambda.Runtime.PYTHON_3_12,
-            code=_lambda.Code.from_asset("src/lambda"),
-            handler="lottery.handler",
+            code=_lambda.Code.from_asset("src/lambda/lottery"),
+            handler="lottery.lambda_handler",
             log_group=lottery_log_group,
             timeout=Duration.seconds(10),
             environment={
