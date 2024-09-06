@@ -16,11 +16,19 @@ class IowaabdTrackingStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        lottery_parameter = _ssm.StringParameter(
+        lottery_current_list_parameter = _ssm.StringParameter(
             self,
-            "LotteryParameter",
+            "LotteryCurrentListParameter",
             parameter_name='/lottery/current',
             string_value='{}',
+            description='Contains current list of lottery liquor from Iowaabd',
+        )
+
+        lottery_url_parameter = _ssm.StringParameter(
+            self,
+            "LotteryURLParameter",
+            parameter_name='/lottery/iowaabd_url',
+            string_value='https://shop.iowaabd.com/snapshot/lottery',
             description='Contains current list of lottery liquor from Iowaabd',
         )
 
@@ -39,7 +47,8 @@ class IowaabdTrackingStack(Stack):
                        log_group=lottery_log_group,
                        timeout=Duration.seconds(20),
                        environment={
-                           'lottery_parameter_name': lottery_parameter.parameter_name
+                           'lottery_current_list_parameter_name': lottery_current_list_parameter.parameter_name,
+                           'lottery_url_parameter_name': lottery_url_parameter.parameter_name
                        },
                        )
         # lottery_function.add_to_role_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('aws-service-role/AmazonSSMServiceRolePolicy'))
