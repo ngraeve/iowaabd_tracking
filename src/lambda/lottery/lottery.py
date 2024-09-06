@@ -50,7 +50,6 @@ def get_live_data(url):
 def write_new_data(parameter_name, new_data):
     logger.info(f'Updating value of {parameter_name} parameter')
     try:
-        # Attempt to update the parameter
         response = ssm_client.put_parameter(
             Name=parameter_name,
             Value=new_data,
@@ -58,12 +57,10 @@ def write_new_data(parameter_name, new_data):
         )
         logger.info("Parameter successfully updated:", response)
     except ClientError as e:
-        # Handle AWS service specific errors
         error_code = e.response['Error']['Code']
         error_message = e.response['Error']['Message']
         logger.error(f"Error updating parameter: {error_code} - {error_message}")
     except Exception as e:
-        # Handle any other exceptions
         logger.error(f"An unexpected error occurred: {str(e)}")
 
 
