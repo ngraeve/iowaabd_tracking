@@ -44,6 +44,7 @@ def get_live_data(url):
             continue
         data[td[1].text.strip()] = td[2].text.strip()
 
+    logger.info(f'Data returned from {url} - {data}')
     return data
 
 
