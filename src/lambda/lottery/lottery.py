@@ -9,6 +9,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 logger = logging.getLogger(__name__)
+logging.getLogger().setLevel(logging.INFO)
 ssm_client = boto3.client('ssm')
 
 
