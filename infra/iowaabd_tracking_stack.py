@@ -1,9 +1,13 @@
+import os
+
 from aws_cdk import (
     Duration,
     Stack,
     aws_logs as _logs,
     aws_lambda as _lambda,
     aws_ssm as _ssm,
+    aws_sns as _sns,
+    aws_sns_subscriptions as _sns_subscriptions,
     aws_iam as _iam,
 )
 
@@ -15,6 +19,15 @@ class IowaabdTrackingStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        sms_lottery_current_list_topic = _sns.Topic(
+            self,
+            'LotteryCurrentListTopic'
+        )
+
+        sms_lottery_current_list_topic.add_subscription(
+            _sns_subscriptions.SmsSubscription(os.environ['NICK_PHONE_NUMBER'])
+        )
 
         lottery_current_list_parameter = _ssm.StringParameter(
             self,
@@ -49,8 +62,11 @@ class IowaabdTrackingStack(Stack):
             timeout=Duration.seconds(20),
             environment={
                 'lottery_current_list_parameter_name': lottery_current_list_parameter.parameter_name,
-                'lottery_url_parameter_name': lottery_url_parameter.parameter_name
+                'lottery_url_parameter_name': lottery_url_parameter.parameter_name,
+                'sms_lottery_current_list_topic_arn': sms_lottery_current_list_topic.topic_arn
             },
         )
 
         lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMFullAccess'))
+
+        sms_lottery_current_list_topic.grant_publish(lottery_function.role)

@@ -11,6 +11,7 @@ from botocore.exceptions import ClientError
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
 ssm_client = boto3.client('ssm')
+sns_client = boto3.client('sns')
 
 
 def get_ssm_parameter_value(parameter_name):
@@ -72,5 +73,11 @@ def lambda_handler(event, context):
     if new_dict != old_dict:
         logger.info('Website has updated')
         write_new_data(os.environ['lottery_current_list_parameter_name'], json.dumps(new_dict))
+
+        response = sns_client.publish(
+            TopicArn=os.environ['sms_lottery_current_list_topic_arn'],
+            Message=f'Lottery list has changed - {json.dumps(new_dict)}',
+        )
+
     else:
         logger.info('Website has not been updated.  Exiting...')
