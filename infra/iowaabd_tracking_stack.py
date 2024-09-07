@@ -53,4 +53,4 @@ class IowaabdTrackingStack(Stack):
             },
         )
 
-        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMReadOnlyAccess'))
+        lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMFullAccess'))
