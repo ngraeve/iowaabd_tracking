@@ -7,7 +7,8 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_ssm as _ssm,
     aws_sns as _sns,
-    aws_sns_subscriptions as _sns_subscriptions,
+    aws_events as _events,
+    aws_events_targets as _targets,
     aws_iam as _iam,
 )
 
@@ -25,9 +26,9 @@ class IowaabdTrackingStack(Stack):
             'LotteryCurrentListTopic'
         )
 
-        sms_lottery_current_list_topic.add_subscription(
-            _sns_subscriptions.SmsSubscription(os.environ['NICK_PHONE_NUMBER'])
-        )
+        # sms_lottery_current_list_topic.add_subscription(
+        #     _sns_subscriptions.SmsSubscription(os.environ['NICK_PHONE_NUMBER'])
+        # )
 
         lottery_current_list_parameter = _ssm.StringParameter(
             self,
@@ -68,5 +69,12 @@ class IowaabdTrackingStack(Stack):
         )
 
         lottery_function.role.add_managed_policy(_iam.ManagedPolicy.from_aws_managed_policy_name('AmazonSSMFullAccess'))
-
         sms_lottery_current_list_topic.grant_publish(lottery_function.role)
+
+        cron_every_30_minutes = _events.Rule(
+            self,
+            'Every30Minutes',
+            schedule=_events.Schedule.cron(minute='5'),
+        )
+
+        cron_every_30_minutes.add_target(_targets.LambdaFunction(lottery_function))
