@@ -74,7 +74,7 @@ class IowaabdTrackingStack(Stack):
         cron_every_30_minutes = _events.Rule(
             self,
             'Every30Minutes',
-            schedule=_events.Schedule.cron(minute='5'),
+            schedule=_events.Schedule.cron(minute='30'),
         )
 
         cron_every_30_minutes.add_target(_targets.LambdaFunction(lottery_function))
