@@ -55,7 +55,7 @@ class IowaabdTrackingStack(Stack):
         lottery_function = _lambda_python(
             self,
             "LotteryFunction",
-            entry="src/lambda/lottery",
+            entry="src/lambdas/lottery",
             runtime=_lambda.Runtime.PYTHON_3_12,
             index="lottery.py",
             handler="lambda_handler",
