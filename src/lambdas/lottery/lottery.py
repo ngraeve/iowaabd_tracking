@@ -68,7 +68,9 @@ def write_new_data(parameter_name, new_data_string):
 
 def lambda_handler(event, context):
     old_dict = json.loads(get_ssm_parameter_value(os.environ['lottery_current_list_parameter_name']))
-    new_dict = get_live_data(get_ssm_parameter_value(os.environ['lottery_url_parameter_name']))
+
+    iowaabd_url = get_ssm_parameter_value(os.environ['lottery_url_parameter_name'])
+    new_dict = get_live_data(iowaabd_url)
 
     if new_dict != old_dict:
         logger.info('Website has updated')
@@ -78,7 +80,7 @@ def lambda_handler(event, context):
             TopicArn=os.environ['sms_lottery_current_list_topic_arn'],
             Message=f'Lottery list has changed:\n\r'
                     f'{json.dumps(new_dict)}\n\r'
-                    f'{os.environ['lottery_url_parameter_name']}',
+                    f'URL - {iowaabd_url}',
         )
 
     else:
