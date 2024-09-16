@@ -76,7 +76,9 @@ def lambda_handler(event, context):
 
         response = sns_client.publish(
             TopicArn=os.environ['sms_lottery_current_list_topic_arn'],
-            Message=f'Lottery list has changed - {json.dumps(new_dict)}',
+            Message=f'Lottery list has changed:\n\r'
+                    f'{json.dumps(new_dict)}\n\r'
+                    f'{os.environ['lottery_url_parameter_name']}',
         )
 
     else:
