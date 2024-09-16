@@ -10,8 +10,8 @@ from botocore.exceptions import ClientError
 
 logger = logging.getLogger(__name__)
 logging.getLogger().setLevel(logging.INFO)
-ssm_client = boto3.client('ssm', 'us-east-1')
-sns_client = boto3.client('sns', 'us-east-1')
+ssm_client = boto3.client('ssm', 'us-east-2')
+sns_client = boto3.client('sns', 'us-east-2')
 
 
 def get_ssm_parameter_value(parameter_name):
